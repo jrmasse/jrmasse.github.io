@@ -4,6 +4,7 @@ $(document).ready(function(){
 	var currentPage = window.location.pathname;
 	var calcPage = '/calcProject/calcProjectMain.html';
 	var sandboxPage = '/sandbox/sandbox.html';
+	var bonusEstPage = '/bonusEst/bonusEst.html';
 	var homePage = '/';
 
 	console.log(currentPage);
@@ -16,6 +17,9 @@ $(document).ready(function(){
 			break;
 		case sandboxPage:
 			$("#sandboxBtn").addClass('active');
+			break;
+		case bonusEstPage:
+			$("#bonusEstBtn").addClass('active');
 			break;
 		default:
 			$("#homeBtn").addClass('active');

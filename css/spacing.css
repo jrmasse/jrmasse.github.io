@@ -1,0 +1,41 @@
+.inlineBlock{
+	display: inline-block;
+}
+.labelWidth{
+	width: 140px;
+}
+
+.pad5{
+	padding: 5px;
+}
+.pad10{
+	padding: 10px;
+}
+.padB10{
+	padding-bottom: 10px;
+}
+.pad15{
+	padding: 15px;
+}
+.padR15{
+	padding-right:15px;
+}
+.padR25{
+	padding-right:25px;
+}
+.padR45{
+	padding-right:45px;
+}
+
+.margin5{
+	margin: 5px;
+}
+.margin10{
+	margin: 10px;
+}
+.margin15{
+	margin: 15px;
+}
+.marginR15{
+	margin-right:15px;
+}
