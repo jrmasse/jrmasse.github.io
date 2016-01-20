@@ -11,20 +11,35 @@
 .pad10{
 	padding: 10px;
 }
-.padB10{
-	padding-bottom: 10px;
-}
 .pad15{
 	padding: 15px;
 }
+.pad20{
+	padding: 20px;
+}
+.padB10{
+	padding-bottom: 10px;
+}
+.padR5{
+	padding-right:5px;
+}
+.padR10{
+	padding-right:10px;
+}
 .padR15{
 	padding-right:15px;
+}
+.padR20{
+	padding-right:20px;
 }
 .padR25{
 	padding-right:25px;
 }
 .padR45{
 	padding-right:45px;
+}
+.padT20{
+	padding-top:20px;
 }
 
 .margin5{

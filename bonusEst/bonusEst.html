@@ -26,41 +26,54 @@
     </ul>
   </div>
 
+
+<div class='padT20' style='width:130ex; overflow:auto; margin-left:auto; margin-right:auto'>
   <div style='float:left; width:30%'>
     <div class='padR15 padB10'>
       <div class=' inlineBlock labelWidth'>Starting Year:</div>
-      <input type='text' id='startYear' name='startYear' size='5'/>
+      <span>&nbsp;&nbsp;</span>
+      <input type='text' id='startYear' name='startYear' size='5' onblur='validateInput(this,"int")'/>
     </div>
     <div class='padR15 padB10'>
       <div class=' inlineBlock labelWidth'>Starting Salary:</div>
-      <input type='text' id='startSalary' name='startSalary' size='5'/>
+      <span>$</span>
+      <input type='text' id='startSalary' name='startSalary' size='5' onblur='validateInput(this,"dec")'/>
     </div>
     <div class='padR15 padB10'>
       <div class=' inlineBlock labelWidth'>Annual Raise Amt:</div>
+      <span>$</span>
       <input type='text' id='annualRaise' name='annualRaise' step='1' size='5'/>
     </div>
     <div class='padR15 padB10'>
       <div class=' inlineBlock labelWidth'>Est Bonus Percent:</div>
+      <span>&nbsp;&nbsp;</span>
       <input type='text' id='bonusPerc' name='bonusPerc' size='5'/>
     </div>
     <div class='padR15 padB10'>
       <div class=' inlineBlock labelWidth'>Years to Calculate:</div>
+      <span>&nbsp;&nbsp;</span>
       <input type='text' id='years' name='years' size='5'/>
     </div>
 
     <div class='estBtns' style='width:200px; height:auto'>
-      <div class='padR15 padB10' style='float:left'>
+      <div class='padR20 padB10' style='float:left'>
         <input type='submit' name='clearBtn' value='Clear' onclick='return clearEstimate();'>
       </div>
-      <div class='padR15 padB10' style='float:right'>
+      <div class='padR20 padB10' style='float:left'>
+        <input type='submit' name='initData' value='Init' onclick='return initData();'>
+      </div>
+      <div class='padB10' style='float:left'>
         <input type='submit' name='calcBonus' value='Calculate' onclick='return estimateBonus();'>
       </div>
 
     </div>    
   </div>
 
-  <div id='bonusEstTab' style='float:right; width:70%'>
+  <div id='bonusEstTab' class='blkBrdr' style='float:left; width:90ex'>
+      <!-- <span class='tblHeader'>Test</span> -->
+    </div>
   </div>
+</div>
 
 </div>
 </body>  	
