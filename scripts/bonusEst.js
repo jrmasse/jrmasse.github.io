@@ -1,3 +1,6 @@
+
+var myData;
+
 function validateInput(input,type){
 	var inputId = '#' + input.id;
 	var decTest = /^\d*(\.\d{1})?\d{0,1}$/;
@@ -5,18 +8,41 @@ function validateInput(input,type){
 	if(data % 1 != 0){console.log("not number")}
 }
 
-function clearEstimate(){
-	$('#bonusTableContainer').remove();
-	$('#bonusEstTab').append("<div id='bonusTableContainer' style='width:85ex; margin-left:auto; margin-right:auto'></div>");	
-	addHeader();
+function clearEstimate(calledFromCalculate){
+	$('#tblContainer').remove();
+	if (!calledFromCalculate) {myData = "";
+							   clearInput();
+	                  		   toggleInput()};
 }
 
 function initData(){
+	myData = new financialByYear(2012,31387,0);
+
 	$("#startYear").val("2013");
 	$("#startSalary").val("45600");
 	$("#annualRaise").val("3600");
 	$("#bonusPerc").val("3.2");
 	$("#years").val("6");
+	toggleInput('disabled')
+}
+
+function toggleInput(action){
+	var inputs = document.getElementsByTagName('input');
+	for(var i = 0; i < inputs.length; i++){
+	  if(inputs[i].type == 'text' && inputs[i].id != 'years'){
+	    inputs[i].disabled = action;
+	  }
+	}
+}
+
+function clearInput(){
+	// $(':input').val('');
+	var inputs = document.getElementsByTagName('input');
+	for(var i = 0; i < inputs.length; i++){
+	  if(inputs[i].type == 'text'){
+	    inputs[i].value = "";
+	  }
+	}	
 }
 
 function estimateBonus(){
@@ -29,21 +55,17 @@ function estimateBonus(){
 	var runningSalary = 0;
 	var calculatedBonus = 0;
 
-	clearEstimate();
-
+	clearEstimate(1);
+	addContainers();
 	financials = [];
-	financials[0] = new financialByYear(2012,31387,0);
-
-	addHeader();
 
 	for (var i = 0; i < years; i++) {
-
-		financials[i+1] = new financialByYear(startYear+i,calculatedSalary,calcBonus(bonusPerc)),
+		financials[i] = new financialByYear(startYear+i,calculatedSalary,calcBonus(bonusPerc));
 		runningSalary = runningSalary * bonusPerc + runningSalary + calculatedSalary;
-		// addTxt(parseInt(startYear+i),calculatedSalary,roundNum(runningSalary*bonusPerc));
 		calculatedSalary = calculatedSalary+raiseAmt;
 	};
 
+	if (myData) {addTxt(myData.year,myData.salary,myData.bonusGross,myData.adjustedSalary)};
 	for (var i = 0; i < financials.length; i++) {
 		addTxt(financials[i].year,financials[i].salary,financials[i].bonusGross,financials[i].adjustedSalary)
 	};
@@ -53,7 +75,7 @@ function calcBonus(bonusPerc){
 	var currentBonus = 0;
 	var runningSalary = 0;
 	for (var i = 0; i < financials.length; i++) {
-		runningSalary += financials[i].salary;
+		runningSalary += financials[i].salary
 	};
 	return roundNum(runningSalary*bonusPerc);
 }
@@ -70,26 +92,21 @@ function roundNum(num){
 	return (Math.round(num * 100) / 100).toFixed(2);
 }
 
-function addHeader(){
-	var header = "<div id='salaryHeader' class='blkLineBtm'>"+
-			 	 "<div class='tblHeader'>"+"Year Ending"+"</div>"+
-             	 "<div class='tblHeader'>"+"Annual Salary"+"</div>"+
-             	 "<div class='tblHeader'>"+"Est Bonus"+"</div>"+
-             	 "<div class='tblHeader'>"+"Adjusted Salary"+"</div>"
-             	 "</div>";      
-	if(!$('#salaryHeader').length) {$('#bonusTableContainer').append(header)};
+function addContainers(){ 
+	var tblContainer = "<div id='tblContainer' style='height:25ex;overflow:auto'></div>"   
+	if(!$('#tblContainer').length) {$('#bonusTableContainer').append(tblContainer)};
 }
 
 function addTxt(year,salary,bonusGross,adjSalary){
 	var salaryData = "<div class="+addBkgnd(year)+">"+
-                     "<div class='tblValue'>"+"Dec "+year+"</div>"+
-                     "<div class='tblValue'>"+'$'+roundNum(salary)+"</div>"+
-                     "<div class='tblValue'>"+'$'+roundNum(bonusGross)+"</div>"+
-                     "<div class='tblValue'>"+'$'+roundNum(adjSalary)+"</div>"+
-                     "</div>";
-	$('#bonusTableContainer').append(salaryData);
+					 "<div class='tblValue'>"+"Dec "+year+"</div>"+
+					 "<div class='tblValue'>"+'$'+roundNum(salary)+"</div>"+
+					 "<div class='tblValue'>"+'$'+roundNum(bonusGross)+"</div>"+
+					 "<div class='tblValue'>"+'$'+roundNum(adjSalary)+"</div>"+
+					 "</div>";
+	$('#tblContainer').append(salaryData);
 }
 
 function addBkgnd(year){
-	if (year%2!=0) {return 'tblValRowBkgnd'}
+	if (year%2!=0) {return 'tblValRowBkgnd'}else{return 'noBackground'}
 }

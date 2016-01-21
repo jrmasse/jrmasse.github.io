@@ -43,15 +43,19 @@ ul.navigationBar{
 	background-color: #F8F8F8 ;
 }
 
-.blkLineBtm{
-	border-bottom: 1px solid black;
-}
-
 .blkBrdr{
 	border: 1px solid black;
+}
+
+.tblBrdr{
+	border: 1px solid #c7c7c7;
 	border-radius: 10px;
 }
 
+.tblHdrUndrLn{
+	border-bottom: 1px solid #c7c7c7;
+}
+
 #bonusEstTab{
-	min-height: 165px;
+	height: 28.5ex;
 }
