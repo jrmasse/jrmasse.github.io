@@ -32,27 +32,32 @@
       <div class='padR15 padB10'>
         <div class=' inlineBlock labelWidth'>Starting Year:</div>
         <span>&nbsp;&nbsp;</span>
-        <input type='text' id='startYear' name='startYear' size='6' onblur='validateInput(this,"int")'/>
+        <input type='text' placeholder="1999" id='startYear' name='startYear' size='6' onblur="inputIcon(this,'yearIcon','int',0)"/>
+        <img id='yearIcon' src="/images/redX.png" alt="Smiley face" height="15" width="15">        
       </div>
       <div class='padR15 padB10'>
         <div class=' inlineBlock labelWidth'>Starting Salary:</div>
         <span>$</span>
-        <input type='text' id='startSalary' name='startSalary' size='6' onblur='validateInput(this,"dec")'/>
+        <input type='text' placeholder="12345.99" id='startSalary' name='startSalary' size='6' onblur="inputIcon(this,'salaryIcon','either',2)"/>
+        <img id='salaryIcon' src="/images/redX.png" alt="Smiley face" height="15" width="15"> 
       </div>
       <div class='padR15 padB10'>
         <div class=' inlineBlock labelWidth'>Annual Raise Amt:</div>
         <span>$</span>
-        <input type='text' id='annualRaise' name='annualRaise' step='1' size='6'/>
+        <input type='text' placeholder="1000.00" id='annualRaise' name='annualRaise' step='1' size='6' onblur="inputIcon(this,'raiseIcon','either',2)" />
+        <img id='raiseIcon' src="/images/redX.png" alt="Smiley face" height="15" width="15"> 
       </div>
       <div class='padR15 padB10'>
         <div class=' inlineBlock labelWidth'>Est Bonus Percent:</div>
         <span>&nbsp;&nbsp;</span>
-        <input type='text' id='bonusPerc' name='bonusPerc' size='6'/>
+        <input type='text' placeholder="3.2" id='bonusPerc' name='bonusPerc' size='6' onblur="inputIcon(this,'bonusPercIcon','dec',2)" />
+        <img id ='bonusPercIcon' src="/images/redX.png" alt="Smiley face" height="15" width="15"> 
       </div>
       <div class='padR15 padB10'>
         <div class=' inlineBlock labelWidth'>Years to Calculate:</div>
         <span>&nbsp;&nbsp;</span>
-        <input type='text' id='years' name='years' size='6'/>
+        <input type='text' placeholder="6" id='years' name='years' size='6' onblur="inputIcon(this,'yearsIcon','int',0)"/>
+        <img id='yearsIcon' src="/images/redX.png" alt="Smiley face" height="15" width="15"> 
       </div>
 
       <div class='estBtns' style='width:100%; height:auto; overflow:auto'>

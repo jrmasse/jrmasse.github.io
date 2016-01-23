@@ -1,12 +1,9 @@
 
 var myData;
 
-function validateInput(input,type){
-	var inputId = '#' + input.id;
-	var decTest = /^\d*(\.\d{1})?\d{0,1}$/;
-	data = $(inputId).val();
-	if(data % 1 != 0){console.log("not number")}
-}
+$(document).ready(function(){
+	$('img').hide();
+});
 
 function clearEstimate(calledFromCalculate){
 	$('#tblContainer').remove();
@@ -23,7 +20,8 @@ function initData(){
 	$("#annualRaise").val("3600");
 	$("#bonusPerc").val("3.2");
 	$("#years").val("6");
-	toggleInput('disabled')
+	toggleInput('disabled');
+	toggleInputImgs('pass');
 }
 
 function toggleInput(action){
@@ -35,8 +33,17 @@ function toggleInput(action){
 	}
 }
 
+function toggleInputImgs(img){
+	var imgPath;
+	if (img = 'pass') { 
+		imgPath = "/images/greenCheck.png";
+	} 
+	else {
+		imgPath = "/images/redX.png";
+	}
+}
+
 function clearInput(){
-	// $(':input').val('');
 	var inputs = document.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i++){
 	  if(inputs[i].type == 'text'){
@@ -47,20 +54,18 @@ function clearInput(){
 
 function estimateBonus(){
 	var startYear = parseInt($('#startYear').val());
-	var startSalary = parseInt($('#startSalary').val());
+	var calculatedSalary = parseInt($('#startSalary').val());
 	var raiseAmt    = parseInt($('#annualRaise').val());
 	var bonusPerc   = parseFloat($('#bonusPerc').val()/100);
 	var years       = parseInt($('#years').val());
-	var calculatedSalary = startSalary;
 	var runningSalary = 0;
-	var calculatedBonus = 0;
 
 	clearEstimate(1);
 	addContainers();
 	financials = [];
 
 	for (var i = 0; i < years; i++) {
-		financials[i] = new financialByYear(startYear+i,calculatedSalary,calcBonus(bonusPerc));
+		financials[i] = new financialByYear(startYear+i,calculatedSalary,calcBonus(bonusPerc,i));
 		runningSalary = runningSalary * bonusPerc + runningSalary + calculatedSalary;
 		calculatedSalary = calculatedSalary+raiseAmt;
 	};
@@ -71,12 +76,17 @@ function estimateBonus(){
 	};
 };
 
-function calcBonus(bonusPerc){
+function calcBonus(bonusPerc,y){
 	var currentBonus = 0;
 	var runningSalary = 0;
+
+	//take into account partial first year if using my personal data
+	if (y==0&&myData) {runningSalary = myData.salary}
+
 	for (var i = 0; i < financials.length; i++) {
 		runningSalary += financials[i].salary
 	};
+
 	return roundNum(runningSalary*bonusPerc);
 }
 
@@ -109,4 +119,41 @@ function addTxt(year,salary,bonusGross,adjSalary){
 
 function addBkgnd(year){
 	if (year%2!=0) {return 'tblValRowBkgnd'}else{return 'noBackground'}
+}
+
+function inputIcon(inputObj,inputImgId,type,precision){
+	var enteredVal = $(inputObj).val();
+	var result = validateInput(enteredVal,type);
+
+	if (!enteredVal) {
+		$('#'+inputImgId).hide();
+	}
+	else if (result){
+		$(inputObj).val(Number($(inputObj).val()).toFixed(precision));
+		$('#'+inputImgId).show();
+		$('#'+inputImgId).attr('src',"/images/greenCheck.png");
+	}
+	else{
+		$('#'+inputImgId).show();
+		$('#'+inputImgId).attr('src',"/images/redX.png");
+	}
+}
+
+function validateInput(val,type){
+	var intTest = new RegExp(/^\d+$/);
+	var decTest = new RegExp(/^\d+(\.[0-9]{1,2})?$/);
+	
+	switch(type){
+		case 'int':
+			return intTest.test(val);
+			break;
+		case 'dec':
+			return decTest.test(val);
+			break;
+		case 'either':
+			return intTest.test(val) || decTest.test(val);
+			break;
+		default:
+			return false;
+	}
 }
