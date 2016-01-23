@@ -2,58 +2,91 @@
 var myData;
 
 $(document).ready(function(){
-	$('img').hide();
+	initYearSelect();
 });
+
+function initYearSelect(){
+	var currentTime = new Date();
+	var year = currentTime.getFullYear();
+	var select = document.getElementById('startYear');
+	for (var i = year; i >= year - 30; i--) {
+		select.options[select.options.length] = new Option(i,i);
+	};
+}
 
 function clearEstimate(calledFromCalculate){
 	$('#tblContainer').remove();
 	if (!calledFromCalculate) {myData = "";
 							   clearInput();
-	                  		   toggleInput()};
+	                  		   toggleDataFields()};
 }
 
 function initData(){
-	myData = new financialByYear(2012,31387,0);
+	var yearSelect = document.getElementById('startYear');
 
-	$("#startYear").val("2013");
+	yearSelect.value = 2013;
+	myData = new financialByYear(2012,31387,0);
 	$("#startSalary").val("45600");
 	$("#annualRaise").val("3600");
 	$("#bonusPerc").val("3.2");
 	$("#years").val("6");
-	toggleInput('disabled');
+	toggleDataFields('disabled');
 	toggleInputImgs('pass');
 }
 
-function toggleInput(action){
+function toggleDataFields(action){	
+	var yearSelect = document.getElementById('startYear');
 	var inputs = document.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i++){
 	  if(inputs[i].type == 'text' && inputs[i].id != 'years'){
 	    inputs[i].disabled = action;
 	  }
-	}
+	};
+	yearSelect.disabled = action;
 }
 
 function toggleInputImgs(img){
+	var inputDataIconclass;
+	var inputDataIconId;
 	var imgPath;
-	if (img = 'pass') { 
+	if (img == 'pass') { 
 		imgPath = "/images/greenCheck.png";
 	} 
-	else {
+	else if (img == 'fail') {
 		imgPath = "/images/redX.png";
 	}
+	else {
+		imgPath = "/images/pencil.png";
+	}
+
+	$('img').each(function() {
+		inputDataIconclass = $(this).attr('class');
+		inputDataIconId = $(this).attr('id');console.log(inputDataIconId)
+		if (inputDataIconclass == 'inputDataIcon'){		
+			$('#'+inputDataIconId).attr('src',imgPath);
+		}
+	});
+
 }
 
 function clearInput(){
+	var yearSelect = document.getElementById('startYear');
+	var currentTime = new Date();
+	var year = currentTime.getFullYear();
 	var inputs = document.getElementsByTagName('input');
 	for(var i = 0; i < inputs.length; i++){
 	  if(inputs[i].type == 'text'){
 	    inputs[i].value = "";
 	  }
-	}	
+	};
+
+	toggleInputImgs('reset');
+	yearSelect.value = year;
 }
 
 function estimateBonus(){
-	var startYear = parseInt($('#startYear').val());
+	var yearSelect = document.getElementById("startYear");
+	var startYear = Number(yearSelect.options[yearSelect.selectedIndex].text);
 	var calculatedSalary = parseInt($('#startSalary').val());
 	var raiseAmt    = parseInt($('#annualRaise').val());
 	var bonusPerc   = parseFloat($('#bonusPerc').val()/100);
@@ -122,33 +155,33 @@ function addBkgnd(year){
 }
 
 function inputIcon(inputObj,inputImgId,type,precision){
-	var enteredVal = $(inputObj).val();
+	var enteredVal = $(inputObj).val();console.log(inputObj);
 	var result = validateInput(enteredVal,type);
 
 	if (!enteredVal) {
-		$('#'+inputImgId).hide();
+		$('#'+inputImgId).attr('src',"/images/pencil.png");
 	}
 	else if (result){
 		$(inputObj).val(Number($(inputObj).val()).toFixed(precision));
-		$('#'+inputImgId).show();
 		$('#'+inputImgId).attr('src',"/images/greenCheck.png");
 	}
 	else{
-		$('#'+inputImgId).show();
 		$('#'+inputImgId).attr('src',"/images/redX.png");
 	}
 }
 
 function validateInput(val,type){
-	var intTest = new RegExp(/^\d+$/);
 	var decTest = new RegExp(/^\d+(\.[0-9]{1,2})?$/);
+	var intTest = new RegExp(/^\d+$/);
+	//this will test for a 4 digit number. Changed Year input to Select so no longer needed
+	// var yearTest = new RegExp(/^\d{4}$/);
 	
 	switch(type){
-		case 'int':
-			return intTest.test(val);
-			break;
 		case 'dec':
 			return decTest.test(val);
+			break;
+		case 'yearCalc':
+			return intTest.test(val) && val > 0;
 			break;
 		case 'either':
 			return intTest.test(val) || decTest.test(val);
