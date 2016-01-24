@@ -1,16 +1,36 @@
 
 var myData;
+var dataCheck;
 
 $(document).ready(function(){
 	initYearSelect();
-	$("#startSalaryErr").fadeOut();
+	dataCheck = new inputValidationObj();
 });
+
+function financialByYear(year,salary,bonus){	
+	/*
+	 -constructor for financialByYear obj
+	*/	
+
+	this.year           = year;
+	this.salary         = salary;
+	this.bonusGross     = bonus;
+	this.bonusNet       = this.bonusGross*.62;
+	this.adjustedSalary = parseInt(this.salary) + parseInt(this.bonusGross);
+}
+
+function inputValidationObj(){
+	this.salaryInput = false;
+	this.raiseInput  = false;
+	this.bonusPerc   = false;
+	this.yearsToCalc = false;
+}
 
 function initYearSelect(){
 	/*
 	 -initialize options for year selection dropdown
 	 -current range is last thirty years
-	 -year = current year
+	 -year: current year
 	*/
 
 	var year   = new Date().getFullYear();
@@ -31,7 +51,8 @@ function clearEstimate(calledFromCalculate){
 	$('#tblContainer').remove();
 	if (!calledFromCalculate) {myData = "";
 							   clearInput();
-	                  		   toggleDataFields()};
+	                  		   toggleDataFields();
+	                  		   updateDataCheck('updateAll',false)};
 }
 
 function initData(){
@@ -50,6 +71,7 @@ function initData(){
 	$("#years").val("6");
 	toggleDataFields('disabled');
 	toggleInputImgs('pass');
+	updateDataCheck('updateAll',true);
 }
 
 function toggleDataFields(action){	
@@ -120,6 +142,13 @@ function estimateBonus(){
 	 -calculate estimated bonus based on entered criteria
 	 -data existing in table will be cleared/rebuilt
 	*/	
+	console.log(dataCheck);
+	for(var key in dataCheck) {
+    	if (dataCheck[key] == false){
+    		alert("Invalid data entered");
+    		return;
+    	};
+	}
 
 	var yearSelect       = document.getElementById("startYear");
 	var startYear        = Number(yearSelect.options[yearSelect.selectedIndex].text);
@@ -167,21 +196,9 @@ function calcBonus(bonusPerc,iteration){
 	return roundNum(runningSalary*bonusPerc);
 }
 
-function financialByYear(year,salary,bonus){	
-	/*
-	 -constructor for financialByYear obj
-	*/	
-
-	this.year           = year;
-	this.salary         = salary;
-	this.bonusGross     = bonus;
-	this.bonusNet       = this.bonusGross*.62;
-	this.adjustedSalary = parseInt(this.salary) + parseInt(this.bonusGross);
-}
-
 function roundNum(num){
 	/*
-	 -round number to 2 decimal points
+	 -format number to 2 decimal points
 	*/
 
 	return (Math.round(num * 100) / 100).toFixed(2);
@@ -232,21 +249,50 @@ function inputIcon(inputObj,inputImgId,type,precision){
 	 -type: 'dec'/'yearCalc'/'either'
 	*/
 	
-
-	var enteredVal = $(inputObj).val();
+	var inputId    = $(inputObj).attr('id');
+;	var enteredVal = $(inputObj).val();
 	var result     = validateInput(enteredVal,type);
 
 	if (!enteredVal) {
 		$('#'+inputImgId).attr('src',"/images/pencil.png");
+		updateDataCheck(inputId,false);
 	}
 	else if (result){
-		$(inputObj).val(Number($(inputObj).val()).toFixed(precision));
+		$(inputObj).val(Number(enteredVal).toFixed(precision));
 		$('#'+inputImgId).attr('src',"/images/greenCheck.png");
+		updateDataCheck(inputId,true);
 	}
 	else{
 		$('#'+inputImgId).attr('src',"/images/redX.png");
-		$("#startSalaryErr").fadeIn();$("#startSalaryErr").fadeOut();
+		updateDataCheck(inputId,false);
 	}
+	console.log(dataCheck)
+}
+
+function updateDataCheck(inputParam,val){
+	switch(inputParam){
+	case 'updateAll':
+		dataCheck.salaryInput = val;
+		dataCheck.raiseInput  = val;
+		dataCheck.bonusPerc   = val;
+		dataCheck.yearsToCalc = val;
+		break;
+	case 'startSalary':
+		dataCheck.salaryInput = val;
+		break;
+	case 'annualRaise':
+		dataCheck.raiseInput = val;
+		break;
+	case 'bonusPerc':
+		dataCheck.bonusPerc = val;
+		break;
+	case 'years':
+		dataCheck.yearsToCalc = val;
+		break;
+	default:
+		'unexpected';
+	};
+	console.log(dataCheck);
 }
 
 function validateInput(val,type){
