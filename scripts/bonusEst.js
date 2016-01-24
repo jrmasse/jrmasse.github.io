@@ -3,18 +3,31 @@ var myData;
 
 $(document).ready(function(){
 	initYearSelect();
+	$("#startSalaryErr").fadeOut();
 });
 
 function initYearSelect(){
-	var currentTime = new Date();
-	var year = currentTime.getFullYear();
+	/*
+	 -initialize options for year selection dropdown
+	 -current range is last thirty years
+	 -year = current year
+	*/
+
+	var year   = new Date().getFullYear();
 	var select = document.getElementById('startYear');
+
 	for (var i = year; i >= year - 30; i--) {
 		select.options[select.options.length] = new Option(i,i);
 	};
 }
 
 function clearEstimate(calledFromCalculate){
+	/*
+	 -clear input data/reset year select/clear displayed calculated data
+	 -if called for 'Calculate' button click only displayed table data will be removed
+	 -calledFromCalculate: 'true' if called from Calculate button on click else 'false'
+	*/	
+
 	$('#tblContainer').remove();
 	if (!calledFromCalculate) {myData = "";
 							   clearInput();
@@ -22,10 +35,15 @@ function clearEstimate(calledFromCalculate){
 }
 
 function initData(){
-	var yearSelect = document.getElementById('startYear');
+	/*
+	 -set values for my personal data on 'Use My Data' button click
+	 -disable inputs and set icons
+	*/	
 
+	var yearSelect   = document.getElementById('startYear');
 	yearSelect.value = 2013;
-	myData = new financialByYear(2012,31387,0);
+	myData           = new financialByYear(2012,31387,0);
+
 	$("#startSalary").val("45600");
 	$("#annualRaise").val("3600");
 	$("#bonusPerc").val("3.2");
@@ -35,29 +53,35 @@ function initData(){
 }
 
 function toggleDataFields(action){	
-	var yearSelect = document.getElementById('startYear');
-	var inputs = document.getElementsByTagName('input');
+	/*
+	 -set input fields and select element to enabled/disabled
+	 -action: 'true' to enable/'false' to disable
+	*/	
+
+	var yearSelect      = document.getElementById('startYear');
+	var inputs          = document.getElementsByTagName('input');
+	yearSelect.disabled = action;
+
 	for(var i = 0; i < inputs.length; i++){
 	  if(inputs[i].type == 'text' && inputs[i].id != 'years'){
 	    inputs[i].disabled = action;
 	  }
 	};
-	yearSelect.disabled = action;
 }
 
 function toggleInputImgs(img){
+	/*
+	 -set the img patch for all the icons displayed for inputs
+	 -img: 'pass' for greenCheck/'fail' for redX/else pencil
+	*/	
+
 	var inputDataIconclass;
 	var inputDataIconId;
 	var imgPath;
-	if (img == 'pass') { 
-		imgPath = "/images/greenCheck.png";
-	} 
-	else if (img == 'fail') {
-		imgPath = "/images/redX.png";
-	}
-	else {
-		imgPath = "/images/pencil.png";
-	}
+
+	if (img == 'pass') {imgPath = "/images/greenCheck.png"} 
+	else if (img == 'fail') {imgPath = "/images/redX.png"}
+	else {imgPath = "/images/pencil.png"};
 
 	$('img').each(function() {
 		inputDataIconclass = $(this).attr('class');
@@ -70,10 +94,17 @@ function toggleInputImgs(img){
 }
 
 function clearInput(){
+	/*
+	 -clear data from all input fields
+	 -reset year select value to current year
+	*/	
+
+	$('#hovMe').mouseover();
+
 	var yearSelect = document.getElementById('startYear');
-	var currentTime = new Date();
-	var year = currentTime.getFullYear();
-	var inputs = document.getElementsByTagName('input');
+	var year       = new Date().getFullYear();
+	var inputs     = document.getElementsByTagName('input');
+
 	for(var i = 0; i < inputs.length; i++){
 	  if(inputs[i].type == 'text'){
 	    inputs[i].value = "";
@@ -85,13 +116,18 @@ function clearInput(){
 }
 
 function estimateBonus(){
-	var yearSelect = document.getElementById("startYear");
-	var startYear = Number(yearSelect.options[yearSelect.selectedIndex].text);
-	var calculatedSalary = parseInt($('#startSalary').val());
-	var raiseAmt    = parseInt($('#annualRaise').val());
-	var bonusPerc   = parseFloat($('#bonusPerc').val()/100);
-	var years       = parseInt($('#years').val());
-	var runningSalary = 0;
+	/*
+	 -calculate estimated bonus based on entered criteria
+	 -data existing in table will be cleared/rebuilt
+	*/	
+
+	var yearSelect       = document.getElementById("startYear");
+	var startYear        = Number(yearSelect.options[yearSelect.selectedIndex].text);
+	var calculatedSalary = Number($('#startSalary').val());
+	var raiseAmt         = Number($('#annualRaise').val());
+	var bonusPerc        = Number($('#bonusPerc').val()/100);
+	var years            = Number($('#years').val());
+	var runningSalary    = 0;
 
 	clearEstimate(1);
 	addContainers();
@@ -103,18 +139,26 @@ function estimateBonus(){
 		calculatedSalary = calculatedSalary+raiseAmt;
 	};
 
+	//take into account partial first year if using my personal data
 	if (myData) {addTxt(myData.year,myData.salary,myData.bonusGross,myData.adjustedSalary)};
+
 	for (var i = 0; i < financials.length; i++) {
 		addTxt(financials[i].year,financials[i].salary,financials[i].bonusGross,financials[i].adjustedSalary)
 	};
 };
 
-function calcBonus(bonusPerc,y){
-	var currentBonus = 0;
+function calcBonus(bonusPerc,iteration){
+	/*
+	 -calculate culmulative bonus
+	 -bonusPerc: entered bonus percentage
+	 -iteration: position in for loop from calling function
+	*/	
+
+	var currentBonus  = 0;
 	var runningSalary = 0;
 
 	//take into account partial first year if using my personal data
-	if (y==0&&myData) {runningSalary = myData.salary}
+	if (iteration==0&&myData) {runningSalary = myData.salary}
 
 	for (var i = 0; i < financials.length; i++) {
 		runningSalary += financials[i].salary
@@ -123,24 +167,45 @@ function calcBonus(bonusPerc,y){
 	return roundNum(runningSalary*bonusPerc);
 }
 
-function financialByYear(year,salary,bonus){
-	this.year = year;
-	this.salary = salary;
-	this.bonusGross = bonus;
-	this.bonusNet = this.bonusGross*.62;
+function financialByYear(year,salary,bonus){	
+	/*
+	 -constructor for financialByYear obj
+	*/	
+
+	this.year           = year;
+	this.salary         = salary;
+	this.bonusGross     = bonus;
+	this.bonusNet       = this.bonusGross*.62;
 	this.adjustedSalary = parseInt(this.salary) + parseInt(this.bonusGross);
 }
 
 function roundNum(num){
+	/*
+	 -round number to 2 decimal points
+	*/
+
 	return (Math.round(num * 100) / 100).toFixed(2);
 }
 
 function addContainers(){ 
+	/*
+	 -add container div for table data to display calculated financials
+	*/
+
 	var tblContainer = "<div id='tblContainer' style='height:25ex;overflow:auto'></div>"   
+
 	if(!$('#tblContainer').length) {$('#bonusTableContainer').append(tblContainer)};
 }
 
 function addTxt(year,salary,bonusGross,adjSalary){
+	/*
+	 -append element for calculated financial data
+	 -year: year for financialsByYear obj instance
+	 -salary: salary for financialsByYear obj instance
+	 -bonusGross: calculated bonus for financialsByYear obj instance
+	 -adjSalary: salary + bonusGross for financialsByYear obj instance 
+	*/
+
 	var salaryData = "<div class="+addBkgnd(year)+">"+
 					 "<div class='tblValue'>"+"Dec "+year+"</div>"+
 					 "<div class='tblValue'>"+'$'+roundNum(salary)+"</div>"+
@@ -151,12 +216,25 @@ function addTxt(year,salary,bonusGross,adjSalary){
 }
 
 function addBkgnd(year){
+	/*
+	 -return background color for odd rows
+	*/
+
 	if (year%2!=0) {return 'tblValRowBkgnd'}else{return 'noBackground'}
 }
 
 function inputIcon(inputObj,inputImgId,type,precision){
-	var enteredVal = $(inputObj).val();console.log(inputObj);
-	var result = validateInput(enteredVal,type);
+	
+	/*
+	 -return img src for icon based on input data
+	 -inputObj: input element associated with icon
+	 -inputImgId: img Id
+	 -type: 'dec'/'yearCalc'/'either'
+	*/
+	
+
+	var enteredVal = $(inputObj).val();
+	var result     = validateInput(enteredVal,type);
 
 	if (!enteredVal) {
 		$('#'+inputImgId).attr('src',"/images/pencil.png");
@@ -167,10 +245,17 @@ function inputIcon(inputObj,inputImgId,type,precision){
 	}
 	else{
 		$('#'+inputImgId).attr('src',"/images/redX.png");
+		$("#startSalaryErr").fadeIn();$("#startSalaryErr").fadeOut();
 	}
 }
 
 function validateInput(val,type){
+	/*
+	 -test input to determine if valid
+	 -val: data entered to input
+	 -type: flag to determine how data in val arg should be tested
+	*/
+
 	var decTest = new RegExp(/^\d+(\.[0-9]{1,2})?$/);
 	var intTest = new RegExp(/^\d+$/);
 	//this will test for a 4 digit number. Changed Year input to Select so no longer needed
