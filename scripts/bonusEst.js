@@ -1,6 +1,7 @@
 
 var myData;
 var dataCheck;
+var financials;
 
 $(document).ready(function(){
 	initYearSelect();
@@ -107,7 +108,7 @@ function toggleInputImgs(img){
 
 	$('img').each(function() {
 		inputDataIconclass = $(this).attr('class');
-		inputDataIconId = $(this).attr('id');console.log(inputDataIconId)
+		inputDataIconId = $(this).attr('id');
 		if (inputDataIconclass == 'inputDataIcon'){		
 			$('#'+inputDataIconId).attr('src',imgPath);
 		}
@@ -142,7 +143,9 @@ function estimateBonus(){
 	 -calculate estimated bonus based on entered criteria
 	 -data existing in table will be cleared/rebuilt
 	*/	
-	console.log(dataCheck);
+	
+	clearEstimate(1);
+
 	for(var key in dataCheck) {
     	if (dataCheck[key] == false){
     		alert("Invalid data entered");
@@ -158,7 +161,6 @@ function estimateBonus(){
 	var years            = Number($('#years').val());
 	var runningSalary    = 0;
 
-	clearEstimate(1);
 	addContainers();
 	financials = [];
 
@@ -241,7 +243,6 @@ function addBkgnd(year){
 }
 
 function inputIcon(inputObj,inputImgId,type,precision){
-	
 	/*
 	 -return img src for icon based on input data
 	 -inputObj: input element associated with icon
@@ -266,7 +267,6 @@ function inputIcon(inputObj,inputImgId,type,precision){
 		$('#'+inputImgId).attr('src',"/images/redX.png");
 		updateDataCheck(inputId,false);
 	}
-	console.log(dataCheck)
 }
 
 function updateDataCheck(inputParam,val){
@@ -292,7 +292,6 @@ function updateDataCheck(inputParam,val){
 	default:
 		'unexpected';
 	};
-	console.log(dataCheck);
 }
 
 function validateInput(val,type){

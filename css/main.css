@@ -1,3 +1,6 @@
+:disabled {background-color:#EBEBE4}
+
+.center{text-align: center}
 
 .pageContainer{
 	margin:20px;
@@ -59,5 +62,3 @@ ul.navigationBar{
 #bonusEstTab{
 	height: 28.5ex;
 }
-
-:disabled {background-color:#EBEBE4}
