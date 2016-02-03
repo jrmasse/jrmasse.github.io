@@ -192,7 +192,7 @@ function calcBonus(bonusPerc,iteration){
 	if (iteration==0&&myData) {runningSalary = myData.salary}
 
 	for (var i = 0; i < financials.length; i++) {
-		runningSalary += financials[i].salary
+		runningSalary += financials[i].salary;
 	};
 
 	return roundNum(runningSalary*bonusPerc);
@@ -270,6 +270,11 @@ function inputIcon(inputObj,inputImgId,type,precision){
 }
 
 function updateDataCheck(inputParam,val){
+	/*
+	 -set values for dataCheck obj. Used to confirm all fields contain valid data
+	 -inputParam: value used to identiry obj key
+	 -val: TRUE or FALSE
+	*/	
 	switch(inputParam){
 	case 'updateAll':
 		dataCheck.salaryInput = val;
