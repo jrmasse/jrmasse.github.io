@@ -1,5 +1,4 @@
 
-var myData;
 var dataCheck;
 var financials;
 
@@ -50,29 +49,9 @@ function clearEstimate(calledFromCalculate){
 	*/	
 
 	$('#tblContainer').remove();
-	if (!calledFromCalculate) {myData = "";
-							   clearInput();
+	if (!calledFromCalculate) {clearInput();
 	                  		   toggleDataFields();
 	                  		   updateDataCheck('updateAll',false)};
-}
-
-function initData(){
-	/*
-	 -set values for my personal data on 'Use My Data' button click
-	 -disable inputs and set icons
-	*/	
-
-	var yearSelect   = document.getElementById('startYear');
-	yearSelect.value = 2013;
-	myData           = new financialByYear(2012,31387,0);
-
-	$("#startSalary").val("45600");
-	$("#annualRaise").val("3600");
-	$("#bonusPerc").val("3.2");
-	$("#years").val("6");
-	toggleDataFields('disabled');
-	toggleInputImgs('pass');
-	updateDataCheck('updateAll',true);
 }
 
 function toggleDataFields(action){	
@@ -170,9 +149,6 @@ function estimateBonus(){
 		calculatedSalary = calculatedSalary+raiseAmt;
 	};
 
-	//take into account partial first year if using my personal data
-	if (myData) {addTxt(myData.year,myData.salary,myData.bonusGross,myData.adjustedSalary)};
-
 	for (var i = 0; i < financials.length; i++) {
 		addTxt(financials[i].year,financials[i].salary,financials[i].bonusGross,financials[i].adjustedSalary)
 	};
@@ -187,15 +163,16 @@ function calcBonus(bonusPerc,iteration){
 
 	var currentBonus  = 0;
 	var runningSalary = 0;
+	var runningBonus  = 0;
+	var count = 0;
+	if (iteration >= 5) {count = iteration - 5}
 
-	//take into account partial first year if using my personal data
-	if (iteration==0&&myData) {runningSalary = myData.salary}
-
-	for (var i = 0; i < financials.length; i++) {
-		runningSalary += financials[i].salary;
+	for (count; count < iteration; count++) {
+		runningSalary += parseInt(financials[count].salary);
+		runningBonus += parseInt(financials[count].bonusGross);
 	};
 
-	return roundNum(runningSalary*bonusPerc);
+	return roundNum((runningSalary+runningBonus)*bonusPerc);
 }
 
 function roundNum(num){
