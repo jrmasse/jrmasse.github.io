@@ -4,8 +4,18 @@ var financials;
 
 $(document).ready(function(){
 	initYearSelect();
+	addEventHandlers();
 	dataCheck = new inputValidationObj();
 });
+
+function addEventHandlers(){
+	document.getElementById('calcBonusBtn').onclick=function(){estimateBonus();};
+	document.getElementById('clearBtn').onclick=function(){clearEstimate();};
+	document.getElementById('startSalary').onblur=function(){inputIcon(this,'salaryIcon','either',2);};
+	document.getElementById('annualRaise').onblur=function(){inputIcon(this,'raiseIcon','either',2);};
+	document.getElementById('bonusPerc').onblur=function(){inputIcon(this,'bonusPercIcon','dec',2);};
+	document.getElementById('years').onblur=function(){inputIcon(this,'yearsIcon','yearCalc',0);};
+}
 
 function financialByYear(year,salary,bonus){	
 	/*

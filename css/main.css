@@ -62,3 +62,22 @@ ul.navigationBar{
 #bonusEstTab{
 	height: 28.5ex;
 }
+
+.beInputLabel {
+	display: inline-block;
+	width: 140px;
+}
+
+.estBtns{
+	width: 100%;
+	height: auto;
+	overflow: auto;
+}
+
+.beMainBody{
+	width: 135ex;
+	overflow: auto;
+	margin-left: auto;
+	margin-right: auto;
+	padding-top:20px
+}

@@ -16,7 +16,8 @@
 
 <body>
 
-  <div class="pageContainer">        
+  <div class="pageContainer">   
+       
    <div class='center'>
     <ul class='nav nav-tabs navigationBar'>
       <li id='homeBtn'><a href='http://localhost'>Home</a></li>
@@ -26,47 +27,47 @@
   </div>
 
 
-  <div class='padT20' style='width:135ex; overflow:auto; margin-left:auto; margin-right:auto'>
+  <div class='beMainBody'>
     <div style='float:left; width:30%'>
 
       <div class='padR15 padB10'>
-        <div class=' inlineBlock labelWidth'>1st Full Year:</div>
+        <div class='beInputLabel'>1st Full Year:</div>
         <span>&nbsp;&nbsp;</span>
         <select id='startYear' style='width: 76px; height: 26px'></select>       
       </div>
 
       <div class='padR15 padB10'>
-        <div class=' inlineBlock labelWidth'>1st Full Year Salary:</div>
+        <div class=' beInputLabel'>1st Full Year Salary:</div>
         <span>$</span>
-        <input type='text' placeholder="12345.99" id='startSalary' name='startSalary' size='6' onblur="inputIcon(this,'salaryIcon','either',2)"/>
-        <img class ='inputDataIcon' id='salaryIcon' src="/images/pencil.png" alt="Smiley face" height="15" width="15">    
+        <input type='text' placeholder="12345.99" id='startSalary' name='startSalary' size='6'/>
+        <img class ='inputDataIcon' id='salaryIcon' src="/images/pencil.png"height="15" width="15">    
       </div>   
 
       <div class='padR15 padB10'>
-        <div class=' inlineBlock labelWidth'>Annual Raise Amt:</div>
+        <div class=' beInputLabel'>Annual Raise Amt:</div>
         <span>$</span>
-        <input type='text' placeholder="1000.00" id='annualRaise' name='annualRaise' step='1' size='6' onblur="inputIcon(this,'raiseIcon','either',2)" />
-        <img class ='inputDataIcon' id='raiseIcon' src="/images/pencil.png" alt="Smiley face" height="15" width="15"> 
+        <input type='text' placeholder="1000.00" id='annualRaise' name='annualRaise' step='1' size='6'/>
+        <img class ='inputDataIcon' id='raiseIcon' src="/images/pencil.png" height="15" width="15"> 
       </div>
       <div class='padR15 padB10'>
-        <div class=' inlineBlock labelWidth'>Est Bonus Percent:</div>
+        <div class=' beInputLabel'>Est Bonus Percent:</div>
         <span>&nbsp;&nbsp;</span>
-        <input type='text' placeholder="3.2" id='bonusPerc' name='bonusPerc' size='6' onblur="inputIcon(this,'bonusPercIcon','dec',2)" />
-        <img class ='inputDataIcon' id ='bonusPercIcon' src="/images/pencil.png" alt="Smiley face" height="15" width="15"> 
+        <input type='text' placeholder="3.2" id='bonusPerc' name='bonusPerc' size='6' />
+        <img class ='inputDataIcon' id ='bonusPercIcon' src="/images/pencil.png"height="15" width="15"> 
       </div>
       <div class='padR15 padB10'>
-        <div class=' inlineBlock labelWidth'>Years to Calculate:</div>
+        <div class=' beInputLabel'>Years to Calculate:</div>
         <span>&nbsp;&nbsp;</span>
-        <input type='text' placeholder="6" id='years' name='years' size='6' onblur="inputIcon(this,'yearsIcon','yearCalc',0)"/>
-        <img class ='inputDataIcon' id='yearsIcon' src="/images/pencil.png" alt="Smiley face" height="15" width="15"> 
+        <input type='text' placeholder="6" id='years' name='years' size='6'/>
+        <img class ='inputDataIcon' id='yearsIcon' src="/images/pencil.png"height="15" width="15"> 
       </div>
 
-      <div class='estBtns' style='width:100%; height:auto; overflow:auto'>
+      <div class='estBtns'>
         <div class='padR5 padB10' style='float:left'>
-          <input type='submit' name='clearBtn' value='Clear' onclick='clearEstimate();'>
+          <input type='submit'  id='clearBtn' name='clearBtn' value='Clear'>
         </div>
         <div class='padB10' style='float:left'>
-          <input type='submit' name='calcBonus' value='Calculate' onclick='estimateBonus();'>
+          <input type='submit' id='calcBonusBtn' name='calcBonus' value='Calculate'>
         </div>
 
       </div>    
